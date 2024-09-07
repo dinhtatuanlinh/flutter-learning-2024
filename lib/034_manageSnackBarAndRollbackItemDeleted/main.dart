@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:intl/intl.dart';
 
 import 'expenseList.dart';
@@ -39,8 +36,6 @@ class _MyWidget extends State<MyWidget> {
   void _openOverlay() {
     // showModelBottomSheet should be in statefulWidget
     showModalBottomSheet(
-      // apply safe are to model
-      useSafeArea: true,
       // isScrollControlled is true make model full screen
       isScrollControlled: true,
       context: context,
@@ -82,8 +77,7 @@ class _MyWidget extends State<MyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final lengthOfHorizontal = MediaQuery.of(context).size.width;
-    final lengthOfVertical = MediaQuery.of(context).size.height;
+    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: const Text('this is AppBar'),
@@ -91,53 +85,17 @@ class _MyWidget extends State<MyWidget> {
           IconButton(onPressed: _openOverlay, icon: const Icon(Icons.add)),
         ],
       ),
-      body: lengthOfHorizontal < lengthOfVertical
-          ? Column(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5.0),
-                      border: Border.all(
-                        width: 2,
-                        color: Colors.red,
-                      ),
-                    ),
-                    child: const Text(
-                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."),
-                  ),
-                ),
-                // we need wrap ExpenseList inside Expanded widget because now column dont know the number of list
-                Expanded(
-                    child: ExpenseList(
-                  expenses: expenses,
-                  onRemoveExpense: _removeExpense,
-                ))
-              ],
-            )
-          : Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5.0),
-                      border: Border.all(
-                        width: 2,
-                        color: Colors.red,
-                      ),
-                    ),
-                    child: const Text(
-                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."),
-                  ),
-                ),
-                // we need wrap ExpenseList inside Expanded widget because now column dont know the number of list
-                Expanded(
-                    child: ExpenseList(
-                  expenses: expenses,
-                  onRemoveExpense: _removeExpense,
-                ))
-              ],
-            ),
+      body: Column(
+        children: [
+          const Text('Content'),
+          // we need wrap ExpenseList inside Expanded widget because now colomn dont know the number of list
+          Expanded(
+              child: ExpenseList(
+            expenses: expenses,
+            onRemoveExpense: _removeExpense,
+          ))
+        ],
+      ),
     );
   }
 }
@@ -171,24 +129,12 @@ class _NewExpense extends State<NewExpense> {
     });
   }
 
-  void _showDialog() {
-    // check platform is android or ios
-    if (Platform.isAndroid) {
-      showCupertinoDialog(
-          context: context,
-          builder: (ctx) => CupertinoAlertDialog(
-                title: const Text("Invalid input"),
-                content: const Text(
-                    "Make sure a valid title, amount, date was entered"),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(ctx);
-                      },
-                      child: const Text("OK"))
-                ],
-              ));
-    } else {
+  void _saveDate() {
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+    if (_titleController.text.trim().isEmpty ||
+        amountIsInvalid ||
+        _selectedDate == null) {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -204,16 +150,6 @@ class _NewExpense extends State<NewExpense> {
           ],
         ),
       );
-    }
-  }
-
-  void _saveDate() {
-    final enteredAmount = double.tryParse(_amountController.text);
-    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
-    if (_titleController.text.trim().isEmpty ||
-        amountIsInvalid ||
-        _selectedDate == null) {
-      _showDialog();
       return;
     }
 
@@ -232,7 +168,7 @@ class _NewExpense extends State<NewExpense> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
       child: Column(
         children: [
           TextField(

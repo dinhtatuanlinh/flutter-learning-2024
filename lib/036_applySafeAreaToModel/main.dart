@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
@@ -171,24 +168,12 @@ class _NewExpense extends State<NewExpense> {
     });
   }
 
-  void _showDialog() {
-    // check platform is android or ios
-    if (Platform.isAndroid) {
-      showCupertinoDialog(
-          context: context,
-          builder: (ctx) => CupertinoAlertDialog(
-                title: const Text("Invalid input"),
-                content: const Text(
-                    "Make sure a valid title, amount, date was entered"),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(ctx);
-                      },
-                      child: const Text("OK"))
-                ],
-              ));
-    } else {
+  void _saveDate() {
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+    if (_titleController.text.trim().isEmpty ||
+        amountIsInvalid ||
+        _selectedDate == null) {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -204,16 +189,6 @@ class _NewExpense extends State<NewExpense> {
           ],
         ),
       );
-    }
-  }
-
-  void _saveDate() {
-    final enteredAmount = double.tryParse(_amountController.text);
-    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
-    if (_titleController.text.trim().isEmpty ||
-        amountIsInvalid ||
-        _selectedDate == null) {
-      _showDialog();
       return;
     }
 
