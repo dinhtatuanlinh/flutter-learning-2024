@@ -3,28 +3,19 @@ import 'package:my_app/data/dummy_data.dart';
 import 'package:my_app/screens/meals.dart';
 import 'package:my_app/widgets/category_grid_item.dart';
 import 'package:my_app/models/category.dart';
-import 'package:my_app/models/meal.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  final void Function(Meal meal) onToggleFavorite;
-
-  const CategoriesScreen({super.key, required this.onToggleFavorite});
+  const CategoriesScreen({super.key});
 
   // due to statelessWidget there is no context, we need to pass BuildContext as param of method
   void _selectCategory(BuildContext context, Category category) {
-    final filteredMeal = dummyMeals
-        .where((meal) => meal.categories.contains(category.id))
-        .toList();
+    final filteredMeal = dummyMeals.where((meal) => meal.categories.contains(category.id)).toList();
     // Navigator.push(context, MaterialPageRoute(
     //     builder: (ctx) => MealsScreen(title: "title", meals: [])
     // ));
     // to push a screen on top you can use above method or below method
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (ctx) => MealsScreen(
-              title: category.title,
-              meals: filteredMeal,
-              onToggleFavorite: onToggleFavorite,
-            )));
+        builder: (ctx) => MealsScreen(title: category.title, meals: filteredMeal)));
   }
 
   @override
